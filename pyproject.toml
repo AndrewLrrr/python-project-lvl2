@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "avatara_gendiff"
-version = "0.1.0"
-description = "Difference calculator"
+version = "0.1.5"
+description = "File difference generator"
 authors = ["Andrey Larin <larin.projects@gmail.com>"]
 packages = [
   { include = "gendiff" },
@@ -12,6 +12,7 @@ python = "^3.7"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.8.3"
+pytest = "^5.4.3"
 
 [tool.poetry.scripts]
 gendiff = "gendiff.scripts.gendiff:main"
