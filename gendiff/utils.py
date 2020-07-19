@@ -1,9 +1,7 @@
 import ntpath
 import json
 
-
-class FileExtensionError(Exception):
-    pass
+import yaml
 
 
 def read_json_file(path_file):
@@ -11,13 +9,17 @@ def read_json_file(path_file):
         return json.load(f)
 
 
+def read_yaml_file(path_file):
+    with open(path_file, mode='r', encoding='utf8') as f:
+        return yaml.safe_load(f)
+
+
 def get_file_extension(file_path):
     file = ntpath.basename(file_path)
     try:
         return file.split('.')[1]
     except IndexError:
-        raise FileExtensionError(
-            f'File extension is not specified in `{file_path}`')
+        pass
 
 
 def compare(before, after):

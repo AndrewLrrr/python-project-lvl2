@@ -1,0 +1,5 @@
+timeout: 20
+verbose: True
+host: hexlet.io
+format: json
+protocol: https

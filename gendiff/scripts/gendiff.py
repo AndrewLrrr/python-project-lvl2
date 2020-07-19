@@ -2,20 +2,7 @@ import argparse
 import sys
 
 from gendiff import utils
-
-
-class GenDiffError(Exception):
-    pass
-
-
-def json_handler(first_file, second_file):
-    before = utils.read_json_file(first_file)
-    after = utils.read_json_file(second_file)
-    return utils.compare(before, after)
-
-
-def yml_handler(first_file, second_file):
-    return {}
+from gendiff.exceptions import FileExtensionError
 
 
 def main():
@@ -27,20 +14,26 @@ def main():
 
         args = parser.parse_args()
 
-        first_ext = utils.get_file_extension(args.first_file)
-        second_ext = utils.get_file_extension(args.second_file)
+        files_data = []
 
-        if first_ext != second_ext:
-            raise GenDiffError('File extension must be the same')
+        for file_path in [args.first_file, args.second_file]:
+            first_ext = utils.get_file_extension(file_path)
+            if first_ext is None:
+                raise FileExtensionError(
+                    f'File extension is not specified in `{file_path}`')
+            if first_ext == 'json':
+                data = utils.read_json_file(file_path)
+            elif first_ext in ['yml', 'yaml']:
+                data = utils.read_yaml_file(file_path)
+            else:
+                raise FileExtensionError(
+                    f'Unsupported extension `{first_ext}`')
+            files_data.append(data)
 
-        if first_ext == 'json':
-            diff = json_handler(args.first_file, args.second_file)
-        elif first_ext == 'yml':
-            diff = yml_handler(args.first_file, args.second_file)
-        else:
-            raise GenDiffError(f'Unsupported extension `{first_ext}`')
+        diff = utils.compare(*files_data)
+
         utils.print_diff(diff)
-    except (GenDiffError, utils.FileExtensionError, FileNotFoundError) as e:
+    except (FileExtensionError, FileNotFoundError) as e:
         print(e, file=sys.stderr)
 
 
