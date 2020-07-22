@@ -1,5 +1,6 @@
 import ntpath
 import json
+import sys
 from typing import Dict
 
 import yaml
@@ -46,7 +47,7 @@ def compare(before, after):
     return diff
 
 
-def print_diff(diff, prefix='', tab=''):
+def print_diff(diff, prefix='', tab='', output=sys.stdout):
     diff_keys = ('same', 'children', 'diff', 'plus', 'minus')
 
     diff_tabs = {
@@ -61,7 +62,7 @@ def print_diff(diff, prefix='', tab=''):
         False: 'false',
     }
 
-    print(prefix + '{')
+    output.write(prefix + '{\n')
     for key in diff_keys:
         if key not in diff:
             continue
@@ -69,16 +70,23 @@ def print_diff(diff, prefix='', tab=''):
             if isinstance(value, bool):
                 value = bool_values[value]
             if key == 'diff':
-                print(f'{tab}    + {field}: {value[1]}')
-                print(f'{tab}    - {field}: {value[0]}')
+                output.write(f'{tab}{diff_tabs["plus"]}{field}: {value[1]}\n')
+                output.write(f'{tab}{diff_tabs["minus"]}{field}: {value[0]}\n')
             else:
-                new_tab = tab + '    '
+                new_tab = tab + diff_tabs["same"]
                 prefix = f'{tab}{diff_tabs[key]}{field}: '
                 if key == 'children':
-                    print_diff(value, prefix=prefix, tab=new_tab)
+                    print_diff(
+                        value, prefix=prefix, tab=new_tab, output=output)
                 elif key in ['same', 'plus', 'minus']:
                     if isinstance(value, Dict):
-                        print_diff({'same': value}, prefix=prefix, tab=new_tab)
+                        print_diff(
+                            {'same': value},
+                            prefix=prefix,
+                            tab=new_tab,
+                            output=output,
+                        )
                     else:
-                        print(f'{tab}{diff_tabs[key]}{field}: {value}')
-    print(tab + '}')
+                        output.write(
+                            f'{tab}{diff_tabs[key]}{field}: {value}\n')
+    output.write(tab + '}\n')

@@ -1,7 +1,6 @@
 import os
 from io import StringIO
 from unittest import TestCase
-from unittest.mock import patch
 
 from gendiff.utils import (
     compare,
@@ -89,8 +88,7 @@ class TestUtils(TestCase):
         after = read_yaml_file(os.path.join(dirname, 'fixtures/after.yaml'))
         self.assert_diff_files(before, after)
 
-    @patch('sys.stdout', new_callable=StringIO)
-    def test_print_diff(self, mock_stdout):
+    def test_print_diff(self):
         diff = {
             'children': {
                 'common': {
@@ -144,6 +142,8 @@ class TestUtils(TestCase):
 
         expected = '{\n' + TAB_4 + f'\n{TAB_4}'.join(lines) + '\n}\n'
 
-        print_diff(diff)
+        output = StringIO()
+        print_diff(diff, output=output)
+        output.seek(0)
 
-        self.assertEqual(expected, mock_stdout.getvalue())
+        self.assertEqual(expected, output.read())
