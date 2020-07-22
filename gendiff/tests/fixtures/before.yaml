@@ -4,6 +4,9 @@ common:
   setting3: False
   setting6:
     key: value
+  group5:
+    group6:
+      foo: bar
 group1:
   baz: bas
   foo: bar

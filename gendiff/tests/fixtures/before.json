@@ -5,6 +5,11 @@
     "setting3": false,
     "setting6": {
       "key": "value"
+    },
+    "group5": {
+      "group6": {
+        "foo": "bar"
+      }
     }
   },
   "group1": {

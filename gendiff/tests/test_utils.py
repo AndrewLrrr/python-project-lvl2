@@ -24,6 +24,17 @@ class TestUtils(TestCase):
         expected = {
             'children': {
                 'common': {
+                    'children': {
+                        'group5': {
+                            'children': {
+                                'group6': {
+                                    'diff': {
+                                        'foo': ['bar', 'baz'],
+                                    },
+                                },
+                            },
+                        },
+                    },
                     'diff': {
                         'setting3': [False, True],
                     },
@@ -92,6 +103,17 @@ class TestUtils(TestCase):
         diff = {
             'children': {
                 'common': {
+                    'children': {
+                        'group5': {
+                            'children': {
+                                'group6': {
+                                    'diff': {
+                                        'foo': ['bar', 'baz'],
+                                    },
+                                },
+                            },
+                        },
+                    },
                     'same': {
                         'setting1': 'Value 1',
                     },
@@ -121,26 +143,9 @@ class TestUtils(TestCase):
             },
         }
 
-        TAB_4 = ' ' * 4
-        TAB_8 = ' ' * 8
-        TAB_12 = ' ' * 12
-
-        complex_lines = f'\n{TAB_4}'.join([
-            TAB_4 + 'setting1: Value 1',
-            TAB_4 + '+ group3: {\n' + TAB_12 + 'fee: 100500\n' + TAB_8 + '}',
-            TAB_4 + '- group2: {\n' + TAB_12 + 'abc: 12345\n' + TAB_8 + '}',
-        ])
-
-        lines = [
-            'host: hexlet.io',
-            'common: {\n' + TAB_4 + complex_lines + '\n' + TAB_4 + '}',
-            '+ timeout: 20',
-            '- timeout: 50',
-            '+ verbose: true',
-            '- proxy: 123.234.53.22',
-        ]
-
-        expected = '{\n' + TAB_4 + f'\n{TAB_4}'.join(lines) + '\n}\n'
+        dirname = os.path.dirname(__file__)
+        with open(os.path.join(dirname, 'fixtures/expected.txt')) as f:
+            expected = f.read()
 
         output = StringIO()
         print_diff(diff, output=output)

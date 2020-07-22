@@ -5,6 +5,11 @@
     "setting4": "blah blah",
     "setting5": {
       "key5": "value5"
+    },
+    "group5": {
+      "group6": {
+        "foo": "baz"
+      }
     }
   },
   "group1": {
