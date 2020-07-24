@@ -21,14 +21,12 @@ def main():
 
         args = parser.parse_args()
 
-        files_data = []
-
         format_ = args.format
-
         if format_ and format_ not in ('json', 'plain'):
             raise FormatTypeError(f'Format `{format_}` not allowed')
 
-        for file_path in [args.first_file, args.second_file]:
+        files_data = []
+        for file_path in (args.first_file, args.second_file):
             first_ext = utils.get_file_extension(file_path)
             if first_ext is None:
                 raise FileExtensionError(
@@ -47,7 +45,7 @@ def main():
         if format_ == 'plain':
             utils.print_diff_plain(diff)
         elif format_ == 'json':
-            pass
+            utils.print_diff_json(diff)
         else:
             utils.print_diff(diff)
 

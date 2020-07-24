@@ -122,4 +122,10 @@ def print_diff_plain(diff, keys='', output=sys.stdout):
                 else:
                     diff_data = [current_key]
 
-                output.write(diff_messages[diff_type].format(*diff_data) + '\n')
+                output.write(diff_messages[diff_type].format(*diff_data))
+                output.write('\n')
+
+
+def print_diff_json(diff, output=sys.stdout):
+    output.write(json.dumps(diff, indent=4, sort_keys=True))
+    output.write('\n')

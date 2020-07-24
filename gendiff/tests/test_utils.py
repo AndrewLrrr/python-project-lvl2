@@ -9,6 +9,7 @@ from gendiff.utils import (
     get_file_extension,
     read_yaml_file,
     print_diff_plain,
+    print_diff_json,
 )
 
 
@@ -148,14 +149,17 @@ class TestUtils(TestCase):
         with open(os.path.join(dirname, fixture_file_path)) as f:
             expected = f.read()
 
-        output = StringIO()
-        fn(diff, output=output)
-        output.seek(0)
+        mock_output = StringIO()
+        fn(diff, output=mock_output)
+        mock_output.seek(0)
 
-        self.assertEqual(expected, output.read())
+        self.assertEqual(expected, mock_output.read())
 
     def test_print_diff(self):
         self.assert_print(print_diff, 'fixtures/expected.txt')
 
     def test_print_diff_plain(self):
         self.assert_print(print_diff_plain, 'fixtures/expected_plain.txt')
+
+    def test_print_diff_jsin(self):
+        self.assert_print(print_diff_json, 'fixtures/expected_json.json')
