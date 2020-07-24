@@ -2,7 +2,14 @@ import argparse
 import sys
 
 from gendiff import utils
-from gendiff.exceptions import FileExtensionError
+
+
+class FileExtensionError(Exception):
+    pass
+
+
+class FormatTypeError(Exception):
+    pass
 
 
 def main():
@@ -15,6 +22,11 @@ def main():
         args = parser.parse_args()
 
         files_data = []
+
+        format_ = args.format
+
+        if format_ and format_ not in ('json', 'plain'):
+            raise FormatTypeError(f'Format `{format_}` not allowed')
 
         for file_path in [args.first_file, args.second_file]:
             first_ext = utils.get_file_extension(file_path)
@@ -32,8 +44,14 @@ def main():
 
         diff = utils.compare(*files_data)
 
-        utils.print_diff(diff)
-    except (FileExtensionError, FileNotFoundError) as e:
+        if format_ == 'plain':
+            utils.print_diff_plain(diff)
+        elif format_ == 'json':
+            pass
+        else:
+            utils.print_diff(diff)
+
+    except (FileExtensionError, FileNotFoundError, FormatTypeError) as e:
         print(e, file=sys.stderr)
 
 

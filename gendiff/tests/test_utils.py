@@ -8,6 +8,7 @@ from gendiff.utils import (
     read_json_file,
     get_file_extension,
     read_yaml_file,
+    print_diff_plain,
 )
 
 
@@ -99,7 +100,7 @@ class TestUtils(TestCase):
         after = read_yaml_file(os.path.join(dirname, 'fixtures/after.yaml'))
         self.assert_diff_files(before, after)
 
-    def test_print_diff(self):
+    def assert_print(self, fn, fixture_file_path):
         diff = {
             'children': {
                 'common': {
@@ -144,11 +145,17 @@ class TestUtils(TestCase):
         }
 
         dirname = os.path.dirname(__file__)
-        with open(os.path.join(dirname, 'fixtures/expected.txt')) as f:
+        with open(os.path.join(dirname, fixture_file_path)) as f:
             expected = f.read()
 
         output = StringIO()
-        print_diff(diff, output=output)
+        fn(diff, output=output)
         output.seek(0)
 
         self.assertEqual(expected, output.read())
+
+    def test_print_diff(self):
+        self.assert_print(print_diff, 'fixtures/expected.txt')
+
+    def test_print_diff_plain(self):
+        self.assert_print(print_diff_plain, 'fixtures/expected_plain.txt')
