@@ -1,6 +1,5 @@
 import ntpath
 import json
-import sys
 from typing import Dict
 
 import yaml
@@ -47,7 +46,9 @@ def compare(before, after):
     return diff
 
 
-def print_diff(diff, prefix='', tab='', output=sys.stdout):
+def generate_output(diff, prefix='', tab=''):
+    output = []
+
     diff_types = ('same', 'children', 'diff', 'plus', 'minus')
 
     diff_tabs = {
@@ -62,7 +63,7 @@ def print_diff(diff, prefix='', tab='', output=sys.stdout):
         False: 'false',
     }
 
-    output.write(prefix + '{\n')
+    output.append(prefix + '{')
     for diff_type in diff_types:
         if diff_type not in diff:
             continue
@@ -72,29 +73,29 @@ def print_diff(diff, prefix='', tab='', output=sys.stdout):
                 value = bool_values[value]
 
             if diff_type == 'diff':
-                output.write(f'{tab}{diff_tabs["plus"]}{key}: {value[1]}\n')
-                output.write(f'{tab}{diff_tabs["minus"]}{key}: {value[0]}\n')
+                output.append(f'{tab}{diff_tabs["plus"]}{key}: {value[1]}')
+                output.append(f'{tab}{diff_tabs["minus"]}{key}: {value[0]}')
             else:
                 new_tab = tab + diff_tabs["same"]
                 prefix = f'{tab}{diff_tabs[diff_type]}{key}: '
                 if diff_type == 'children':
-                    print_diff(
-                        value, prefix=prefix, tab=new_tab, output=output)
+                    output.append(generate_output(
+                        value, prefix=prefix, tab=new_tab))
                 elif diff_type in ['same', 'plus', 'minus']:
                     if isinstance(value, Dict):
-                        print_diff(
-                            {'same': value},
-                            prefix=prefix,
-                            tab=new_tab,
-                            output=output,
-                        )
+                        output.append(generate_output(
+                            {'same': value}, prefix=prefix, tab=new_tab))
                     else:
-                        output.write(
-                            f'{tab}{diff_tabs[diff_type]}{key}: {value}\n')
-    output.write(tab + '}\n')
+                        output.append(
+                            f'{tab}{diff_tabs[diff_type]}{key}: {value}')
+    output.append(tab + '}')
+
+    return '\n'.join(output)
 
 
-def print_diff_plain(diff, keys='', output=sys.stdout):
+def generate_plain_output(diff, keys=''):
+    output = []
+
     diff_types = ('children', 'diff', 'plus', 'minus')
 
     diff_messages = {
@@ -110,7 +111,7 @@ def print_diff_plain(diff, keys='', output=sys.stdout):
         for key, value in diff[diff_type].items():
             current_key = f'{keys}.{key}'.lstrip('.')
             if diff_type == 'children':
-                print_diff_plain(value, keys=current_key, output=output)
+                output.append(generate_plain_output(value, keys=current_key))
             else:
                 if isinstance(value, Dict):
                     value = 'complex value'
@@ -122,10 +123,10 @@ def print_diff_plain(diff, keys='', output=sys.stdout):
                 else:
                     diff_data = [current_key]
 
-                output.write(diff_messages[diff_type].format(*diff_data))
-                output.write('\n')
+                output.append(diff_messages[diff_type].format(*diff_data))
+
+    return '\n'.join(output)
 
 
-def print_diff_json(diff, output=sys.stdout):
-    output.write(json.dumps(diff, indent=4, sort_keys=True))
-    output.write('\n')
+def generate_json_output(diff):
+    return json.dumps(diff, indent=4, sort_keys=True)

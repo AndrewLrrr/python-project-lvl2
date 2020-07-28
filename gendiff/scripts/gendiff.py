@@ -43,12 +43,13 @@ def main():
         diff = utils.compare(*files_data)
 
         if format_ == 'plain':
-            utils.print_diff_plain(diff)
+            output = utils.generate_plain_output(diff)
         elif format_ == 'json':
-            utils.print_diff_json(diff)
+            output = utils.generate_json_output(diff)
         else:
-            utils.print_diff(diff)
+            output = utils.generate_output(diff)
 
+        print(output)
     except (FileExtensionError, FileNotFoundError, FormatTypeError) as e:
         print(e, file=sys.stderr)
 

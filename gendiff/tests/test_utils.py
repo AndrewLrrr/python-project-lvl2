@@ -1,15 +1,14 @@
 import os
-from io import StringIO
 from unittest import TestCase
 
 from gendiff.utils import (
     compare,
-    print_diff,
+    generate_output,
     read_json_file,
     get_file_extension,
     read_yaml_file,
-    print_diff_plain,
-    print_diff_json,
+    generate_plain_output,
+    generate_json_output,
 )
 
 
@@ -147,19 +146,15 @@ class TestUtils(TestCase):
 
         dirname = os.path.dirname(__file__)
         with open(os.path.join(dirname, fixture_file_path)) as f:
-            expected = f.read()
+            expected_output = f.read()
 
-        mock_output = StringIO()
-        fn(diff, output=mock_output)
-        mock_output.seek(0)
+        self.assertEqual(expected_output, fn(diff))
 
-        self.assertEqual(expected, mock_output.read())
+    def test_generate_output(self):
+        self.assert_print(generate_output, 'fixtures/expected.txt')
 
-    def test_print_diff(self):
-        self.assert_print(print_diff, 'fixtures/expected.txt')
+    def test_generate_plain_output(self):
+        self.assert_print(generate_plain_output, 'fixtures/expected_plain.txt')
 
-    def test_print_diff_plain(self):
-        self.assert_print(print_diff_plain, 'fixtures/expected_plain.txt')
-
-    def test_print_diff_jsin(self):
-        self.assert_print(print_diff_json, 'fixtures/expected_json.json')
+    def test_generate_json_output(self):
+        self.assert_print(generate_json_output, 'fixtures/expected_json.json')
