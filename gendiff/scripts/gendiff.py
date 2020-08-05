@@ -1,57 +1,61 @@
-import argparse
+import os
 import sys
 
-from gendiff import utils
+from gendiff.arg_parser import arg_parse
+from gendiff.diff_tree import build_diff_tree
+from gendiff.file_utils import (
+    JSON_EXTENSION,
+    YML_EXTENSION,
+    YAML_EXTENSION,
+    read_json_file,
+    read_yaml_file,
+)
+from gendiff.render import (
+    DEFAULT_FORMAT,
+    PLAIN_FORMAT,
+    JSON_FORMAT,
+    render,
+    render_default_output,
+    render_plain_output,
+    render_json_output,
+)
+
+
+FORMAT_HANDLERS = {
+    DEFAULT_FORMAT: render_default_output,
+    PLAIN_FORMAT: render_plain_output,
+    JSON_FORMAT: render_json_output,
+}
+
+
+FILE_READERS = {
+    JSON_EXTENSION: read_json_file,
+    YML_EXTENSION: read_yaml_file,
+    YAML_EXTENSION: read_yaml_file,
+}
 
 
 class FileExtensionError(Exception):
     pass
 
 
-class FormatTypeError(Exception):
-    pass
-
-
 def main():
+    args = arg_parse()
+
     try:
-        parser = argparse.ArgumentParser()
-        parser.add_argument('first_file')
-        parser.add_argument('second_file')
-        parser.add_argument('-f', '--format', help='set format of output')
-
-        args = parser.parse_args()
-
-        format_ = args.format
-        if format_ and format_ not in ('json', 'plain'):
-            raise FormatTypeError(f'Format `{format_}` not allowed')
-
         files_data = []
         for file_path in (args.first_file, args.second_file):
-            first_ext = utils.get_file_extension(file_path)
-            if first_ext is None:
-                raise FileExtensionError(
-                    f'File extension is not specified in `{file_path}`')
-            if first_ext == 'json':
-                data = utils.read_json_file(file_path)
-            elif first_ext in ['yml', 'yaml']:
-                data = utils.read_yaml_file(file_path)
-            else:
-                raise FileExtensionError(
-                    f'Unsupported extension `{first_ext}`')
-            files_data.append(data)
-
-        diff = utils.compare(*files_data)
-
-        if format_ == 'plain':
-            output = utils.generate_plain_output(diff)
-        elif format_ == 'json':
-            output = utils.generate_json_output(diff)
-        else:
-            output = utils.generate_output(diff)
-
-        print(output)
-    except (FileExtensionError, FileNotFoundError, FormatTypeError) as e:
+            _, first_ext = os.path.splitext(file_path)
+            try:
+                files_data.append(FILE_READERS[first_ext](file_path))
+            except KeyError:
+                raise FileExtensionError(f'Unsupported file extension `{first_ext}`')  # noqa: E501
+    except (FileExtensionError, FileNotFoundError) as e:
         print(e, file=sys.stderr)
+    else:
+        diff = build_diff_tree(*files_data)
+        output = render(diff, handler=FORMAT_HANDLERS[args.format])
+        print(output)
 
 
 if __name__ == '__main__':

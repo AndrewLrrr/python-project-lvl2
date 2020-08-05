@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "avatara_gendiff"
-version = "1.0.1"
+version = "1.0.2"
 description = "Json and Yaml files difference generator"
 authors = ["Andrey Larin <larin.projects@gmail.com>"]
 packages = [

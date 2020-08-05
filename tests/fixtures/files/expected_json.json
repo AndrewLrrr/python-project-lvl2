@@ -1,11 +1,11 @@
 {
-    "children": {
+    "nested": {
         "common": {
-            "children": {
+            "nested": {
                 "group5": {
-                    "children": {
+                    "nested": {
                         "group6": {
-                            "diff": {
+                            "changed": {
                                 "foo": [
                                     "bar",
                                     "baz"
@@ -15,12 +15,12 @@
                     }
                 }
             },
-            "minus": {
+            "removed": {
                 "group2": {
                     "abc": "12345"
                 }
             },
-            "plus": {
+            "added": {
                 "group3": {
                     "fee": "100500"
                 }
@@ -30,16 +30,16 @@
             }
         }
     },
-    "diff": {
+    "changed": {
         "timeout": [
             50,
             20
         ]
     },
-    "minus": {
+    "removed": {
         "proxy": "123.234.53.22"
     },
-    "plus": {
+    "added": {
         "verbose": true
     },
     "same": {
