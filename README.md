@@ -3,6 +3,49 @@
 [![Build Status](https://travis-ci.org/AndrewLrrr/python-project-lvl2.svg?branch=master)](https://travis-ci.org/AndrewLrrr/python-project-lvl2)
 <a href="https://codeclimate.com/github/AndrewLrrr/python-project-lvl2/maintainability"><img src="https://api.codeclimate.com/v1/badges/68aae8cdee93e7efcc29/maintainability" /></a>
 
+## Работа с проектом:
+### Установка зависимостей:
+```
+poetry install
+```
+---
+### Тесты:
+```
+make test
+```
+---
+### Кодстайл:
+```
+make lint
+```
+
+## Сборка и публикация пакета:
+### Установка репозитория:
+```
+poetry config repositories.avatara_gendiff https://test.pypi.org/legacy/
+```
+---
+### Установка доступа к репозиторию:
+```
+poetry config http-basic.avatara_gendiff {login} {password}
+```
+---
+### Сборка пакета:
+```
+make build
+```
+---
+### Публикация пакета:
+```
+make publish
+```
+
+## Загрузка опубликованного пакета:
+```
+pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple avatara_gendiff
+```
+
+## Примеры использования:
 ### Установка пакета:
 <a href="https://asciinema.org/a/EhhCIpE6ioBEZGWQj8KojHUGA" target="_blank"><img src="https://asciinema.org/a/EhhCIpE6ioBEZGWQj8KojHUGA.svg" /></a>
 
