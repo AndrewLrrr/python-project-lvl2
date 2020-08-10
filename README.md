@@ -62,7 +62,7 @@ pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://
 <a href="https://asciinema.org/a/lwSEpxCx6y94ubcT7dCvB377j" target="_blank"><img src="https://asciinema.org/a/lwSEpxCx6y94ubcT7dCvB377j.svg" /></a>
 
 ### Сравнение файлов JSON --format=json:
-<a href="https://asciinema.org/a/gQEhLWyWRwo0bMAFHQx61MAyW" target="_blank"><img src="https://asciinema.org/a/gQEhLWyWRwo0bMAFHQx61MAyW.svg" /></a>
+<a href="https://asciinema.org/a/YQNAVeXopUri9CkSzJEsirR70" target="_blank"><img src="https://asciinema.org/a/YQNAVeXopUri9CkSzJEsirR70.svg" /></a>
 
 ### Сравнение файлов YAML --format=json:
-<a href="https://asciinema.org/a/w0hlmTHlTyXXW0e7PcS7dczHr" target="_blank"><img src="https://asciinema.org/a/w0hlmTHlTyXXW0e7PcS7dczHr.svg" /></a> 
+<a href="https://asciinema.org/a/lyKbXXbK8hKs3nwmlhEqids6g" target="_blank"><img src="https://asciinema.org/a/lyKbXXbK8hKs3nwmlhEqids6g.svg" /></a> 
