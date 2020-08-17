@@ -14,7 +14,7 @@ def build_diff_tree(before: Dict, after: Dict) -> Dict:
     for key in before.keys() & after.keys():
         if before[key] == after[key]:
             diff.setdefault(SAME, {})[key] = before[key]
-        elif isinstance(before[key], Dict):
+        elif isinstance(before[key], Dict) and isinstance(after[key], Dict):
             diff.setdefault(NESTED, {})[key] = build_diff_tree(before[key], after[key])  # noqa: E501
         else:
             diff.setdefault(CHANGED, {})[key] = [before[key], after[key]]

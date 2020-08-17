@@ -1,5 +1,5 @@
 import json
-from typing import Dict, Callable
+from typing import Dict, Callable, Union
 
 from gendiff.diff_tree import ADDED, CHANGED, NESTED, REMOVED, SAME
 
@@ -13,7 +13,8 @@ def render(diff: Dict, *, handler: Callable) -> str:
     return handler(diff)
 
 
-def render_default_output(diff: Dict, prefix: str = '', tab: str = '') -> str:
+def render_default_output(diff: Dict, prefix: str = '',
+                          tab: str = '', inline: bool = False) -> str:
     output = []
 
     tabs = {
@@ -28,7 +29,9 @@ def render_default_output(diff: Dict, prefix: str = '', tab: str = '') -> str:
         False: 'false',
     }
 
-    output.append(prefix + '{')
+    if not inline:
+        output.append(prefix + '{')
+
     for diff_node in (SAME, NESTED, CHANGED, ADDED, REMOVED):
         if diff_node not in diff:
             continue
@@ -38,10 +41,12 @@ def render_default_output(diff: Dict, prefix: str = '', tab: str = '') -> str:
                 value = bool_values[value]
 
             if diff_node == CHANGED:
-                output.append(f'{tab}{tabs[ADDED]}{key}: {value[1]}')
-                output.append(f'{tab}{tabs[REMOVED]}{key}: {value[0]}')
+                output.append(render_default_output(
+                            {ADDED: {key: value[1]}}, tab=tab, inline=True))
+                output.append(render_default_output(
+                            {REMOVED: {key: value[0]}}, tab=tab, inline=True))
             else:
-                new_tab = tab + tabs[SAME]
+                new_tab = tab + tabs[NESTED]
                 prefix = f'{tab}{tabs[diff_node]}{key}: '
                 if diff_node == NESTED:
                     output.append(render_default_output(
@@ -53,9 +58,17 @@ def render_default_output(diff: Dict, prefix: str = '', tab: str = '') -> str:
                     else:
                         output.append(
                             f'{tab}{tabs[diff_node]}{key}: {value}')
-    output.append(tab + '}')
+
+    if not inline:
+        output.append(tab + '}')
 
     return '\n'.join(output)
+
+
+def map_complex_value(value: Union[str, Dict]) -> str:
+    if isinstance(value, Dict):
+        return 'complex value'
+    return value
 
 
 def render_plain_output(diff: Dict, keys: str = '') -> str:
@@ -76,9 +89,6 @@ def render_plain_output(diff: Dict, keys: str = '') -> str:
             if diff_node == NESTED:
                 output.append(render_plain_output(value, keys=current_key))
             else:
-                if isinstance(value, Dict):
-                    value = 'complex value'
-
                 if diff_node == CHANGED:
                     diff_data = [current_key, value[0], value[1]]
                 elif diff_node == ADDED:
@@ -86,7 +96,9 @@ def render_plain_output(diff: Dict, keys: str = '') -> str:
                 else:
                     diff_data = [current_key]
 
-                output.append(messages[diff_node].format(*diff_data))
+                output.append(messages[diff_node].format(
+                    *map(map_complex_value, diff_data))
+                )
 
     return '\n'.join(output)
 
