@@ -1,7 +1,8 @@
 # Проект: Вычислитель отличий
 
 [![Build Status](https://travis-ci.org/AndrewLrrr/python-project-lvl2.svg?branch=master)](https://travis-ci.org/AndrewLrrr/python-project-lvl2)
-<a href="https://codeclimate.com/github/AndrewLrrr/python-project-lvl2/maintainability"><img src="https://api.codeclimate.com/v1/badges/68aae8cdee93e7efcc29/maintainability" /></a>
+[![Maintainability](https://api.codeclimate.com/v1/badges/68aae8cdee93e7efcc29/maintainability)](https://codeclimate.com/github/AndrewLrrr/python-project-lvl2/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/68aae8cdee93e7efcc29/test_coverage)](https://codeclimate.com/github/AndrewLrrr/python-project-lvl2/test_coverage)
 
 ## Работа с проектом:
 ### Установка зависимостей:
