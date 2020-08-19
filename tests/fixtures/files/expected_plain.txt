@@ -1,6 +1,6 @@
-Property 'common.group5.group6.foo' was changed. From 'bar' to 'baz'
-Property 'common.group3' was added with value: 'complex value'
-Property 'common.group2' was removed
-Property 'timeout' was changed. From '50' to '20'
 Property 'verbose' was added with value: 'True'
+Property 'timeout' was changed. From '50' to '20'
+Property 'common.group3' was added with value: 'complex value'
+Property 'common.group5.group6.foo' was changed. From 'bar' to 'baz'
+Property 'common.group2' was removed
 Property 'proxy' was removed

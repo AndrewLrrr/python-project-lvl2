@@ -150,7 +150,7 @@ def content_after():
 
 
 @pytest.fixture
-def default_render():
+def pretty_render():
     dirname = os.path.dirname(__file__)
     with open(os.path.join(dirname, 'files/expected.txt')) as f:
         yield f.read()

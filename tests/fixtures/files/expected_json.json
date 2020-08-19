@@ -1,6 +1,20 @@
 {
+    "added": {
+        "verbose": true
+    },
+    "changed": {
+        "timeout": [
+            50,
+            20
+        ]
+    },
     "nested": {
         "common": {
+            "added": {
+                "group3": {
+                    "fee": "100500"
+                }
+            },
             "nested": {
                 "group5": {
                     "nested": {
@@ -20,27 +34,13 @@
                     "abc": "12345"
                 }
             },
-            "added": {
-                "group3": {
-                    "fee": "100500"
-                }
-            },
             "same": {
                 "setting1": "Value 1"
             }
         }
     },
-    "changed": {
-        "timeout": [
-            50,
-            20
-        ]
-    },
     "removed": {
         "proxy": "123.234.53.22"
-    },
-    "added": {
-        "verbose": true
     },
     "same": {
         "host": "hexlet.io"
